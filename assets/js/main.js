@@ -372,6 +372,33 @@ function initHome() {
    Key = repo name. Value = full https URL. */
 const LIVE_DEMOS = {};
 
+/* Hide these repos from the Work page (case-sensitive match on repo name) */
+const HIDE_REPOS = new Set([
+  "mohamedattiadev.github.io",
+  "Q-A-code-questions-",
+  "DataMining_Project",
+  "Mohamedattiadev",
+  "HM-1-2-",
+]);
+
+/* Manual extras to PREPEND to the Work grid. Use for repos not on GitHub
+   or projects you want pinned to the top. Each item is a fake-repo shape
+   so the same render code works. */
+const PINNED_PROJECTS = [
+  // {
+  //   name: "University DBMS",
+  //   full_name: "Mohamedattiadev/University-DBMS",
+  //   description: "Final-project DBMS for a uni course. PostgreSQL + Node.",
+  //   html_url: "https://github.com/Mohamedattiadev/University-DBMS",
+  //   homepage: null,
+  //   language: "TypeScript",
+  //   stargazers_count: 0, forks_count: 0, open_issues_count: 0,
+  //   pushed_at: "2026-06-01T00:00:00Z",
+  //   topics: ["database", "school"],
+  //   owner: { login: GH_USER, avatar_url: `https://github.com/${GH_USER}.png` },
+  // },
+];
+
 function liveURL(r) {
   if (LIVE_DEMOS[r.name]) return LIVE_DEMOS[r.name];
   // GitHub Pages enabled on this repo → predictable URL
@@ -404,16 +431,18 @@ async function initWork() {
   const preview = $("#preview");
   try {
     let repos;
-    const cached = sessionStorage.getItem("pf:repos:v5");
+    const cached = sessionStorage.getItem("pf:repos:v6");
     if (cached) repos = JSON.parse(cached);
     else {
       const r = await fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=updated`);
       if (!r.ok) throw 0;
       repos = await r.json();
-      sessionStorage.setItem("pf:repos:v5", JSON.stringify(repos));
+      sessionStorage.setItem("pf:repos:v6", JSON.stringify(repos));
     }
     repos = repos
+      .filter((r) => !HIDE_REPOS.has(r.name))
       .sort((a, b) => (b.stargazers_count - a.stargazers_count) || (new Date(b.pushed_at) - new Date(a.pushed_at)));
+    repos = [...PINNED_PROJECTS, ...repos];
     if (!repos.length) { grid.innerHTML = `<p class="muted">No public repos.</p>`; return; }
 
     let activeLang = "all";
