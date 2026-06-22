@@ -61,7 +61,14 @@ const toast = (msg, ms = 2200) => {
    Real safety: the journal lives in user's own browser localStorage.
 */
 const ADMIN_EMAIL = "mohamedattia.dev@gmail.com";
-const ADMIN_PW    = "attia2026";
+// SHA-256 hash of password. Source never contains the plaintext.
+// To rotate: echo -n "new-password" | sha256sum  → paste hex below.
+const ADMIN_PW_SHA256 = "364a1ef4c237030b3d57a1e7a8831d2a7fe1c4e0f15d2974f8cf359430b49f68";
+
+async function sha256Hex(s) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
 
 function setOwner(on) {
   if (on) localStorage.setItem("pf:owner", "1");
@@ -82,7 +89,8 @@ async function adminSignIn() {
   );
   if (!r) return;
   const email = (r.email || "").trim().toLowerCase();
-  if (email === ADMIN_EMAIL && r.pw === ADMIN_PW) {
+  const hash = await sha256Hex(r.pw || "");
+  if (email === ADMIN_EMAIL && hash === ADMIN_PW_SHA256) {
     setOwner(true);
     toast("Signed in as admin");
     if (currentRoute() === "/admin") goRoute("/journal", true);
@@ -350,15 +358,23 @@ function initHome() {
 /* ====================================
    WORK — uniform grid + popup
    ==================================== */
-/* Whitelist of repos with a REAL deployed live demo.
-   Add new entries here as you deploy projects.
-   Key = repo name (case-sensitive). Value = full https URL. */
-const LIVE_DEMOS = {
-  "aybu-seng-guide": "https://mohamedattiadev.github.io/aybu-seng-guide/",
-  // "Portofolio_On_github_Pages": "https://mohamedattia.dev",
-};
+/* Manual overrides for live demos (use when homepage points wrong place).
+   Key = repo name. Value = full https URL. */
+const LIVE_DEMOS = {};
+
 function liveURL(r) {
-  return LIVE_DEMOS[r.name] || null;
+  if (LIVE_DEMOS[r.name]) return LIVE_DEMOS[r.name];
+  // GitHub Pages enabled on this repo → predictable URL
+  if (r.has_pages) {
+    const user = (r.owner?.login || GH_USER).toLowerCase();
+    return `https://${user}.github.io/${r.name}/`;
+  }
+  // Explicit homepage on repo, with strict filter
+  if (!r.homepage || !/^https?:\/\//.test(r.homepage)) return null;
+  const blocked = /(^https?:\/\/(www\.)?(github\.com|youtube\.com|youtu\.be|twitter\.com|x\.com|linkedin\.com))/i;
+  if (blocked.test(r.homepage)) return null;
+  if (r.html_url && r.homepage.replace(/\/+$/, "") === r.html_url.replace(/\/+$/, "")) return null;
+  return r.homepage;
 }
 function relTime(iso) {
   if (!iso) return "";
@@ -378,13 +394,13 @@ async function initWork() {
   const preview = $("#preview");
   try {
     let repos;
-    const cached = sessionStorage.getItem("pf:repos:v4");
+    const cached = sessionStorage.getItem("pf:repos:v5");
     if (cached) repos = JSON.parse(cached);
     else {
       const r = await fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=updated`);
       if (!r.ok) throw 0;
       repos = await r.json();
-      sessionStorage.setItem("pf:repos:v4", JSON.stringify(repos));
+      sessionStorage.setItem("pf:repos:v5", JSON.stringify(repos));
     }
     repos = repos
       .sort((a, b) => (b.stargazers_count - a.stargazers_count) || (new Date(b.pushed_at) - new Date(a.pushed_at)));
