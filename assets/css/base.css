@@ -438,6 +438,7 @@ button{font:inherit;cursor:pointer;background:none;border:0;color:inherit;paddin
 }
 .rail-tip[aria-hidden="false"]{opacity:1}
 @media (max-width:1100px){.post-rail,.rail-tip{display:none}}
+.post-rail[hidden],.rail-tip[hidden]{display:none!important}
 
 /* Back-to-top floating button */
 .to-top{
