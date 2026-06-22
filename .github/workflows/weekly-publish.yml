@@ -1,0 +1,54 @@
+name: Weekly journal publish
+
+# Runs hourly. The publisher script decides whether to publish based on
+# a deterministic random (day-of-week + hour-of-day) per ISO week.
+# Result: one post lands at a random time, once per week, with no AI calls.
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # every hour at minute 0
+  workflow_dispatch:       # manual trigger from the Actions tab
+    inputs:
+      force:
+        description: "Force publish, ignore schedule"
+        required: false
+        default: "false"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+
+      - name: Run publisher
+        run: |
+          if [ "${{ inputs.force }}" = "true" ]; then
+            node scripts/publish-post.mjs --force
+          else
+            node scripts/publish-post.mjs
+          fi
+
+      - name: Commit and push if changed
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add posts/published.json assets/data/journal.json
+            git commit -m "chore(journal): publish weekly post"
+            git push
+          else
+            echo "No changes."
+          fi

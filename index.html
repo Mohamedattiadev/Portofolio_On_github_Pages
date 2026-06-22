@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <title>Mohamed Attia — Software Engineer</title>
+  <meta name="description" content="Mohamed Attia — software engineering student. Projects, experiments, journal." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%238b5cf6'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle' fill='%23fff' font-family='monospace' font-weight='700'%3EM%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://esm.sh" crossorigin>
+  <link rel="preconnect" href="https://api.github.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.simpleicons.org">
+  <link rel="preconnect" href="https://opengraph.githubassets.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/base.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "gsap":         "https://esm.sh/gsap@3.12.5",
+      "gsap/ScrollTrigger": "https://esm.sh/gsap@3.12.5/ScrollTrigger",
+      "lenis":        "https://esm.sh/lenis@1.1.13",
+      "marked":       "https://esm.sh/marked@14.1.3"
+    }
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="loader" aria-hidden="true"><span class="bar"></span></div>
+  <div id="toast" class="toast" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a href="#/" class="brand" data-route="/" aria-label="Home">Mohamed Attia</a>
+    <nav class="navlinks" aria-label="Primary">
+      <a href="#/"        data-route="/"        class="navlink">Home</a>
+      <a href="#/work"    data-route="/work"    class="navlink">Work</a>
+      <a href="#/journal" data-route="/journal" class="navlink">Journal</a>
+      <a href="#/contact" data-route="/contact" class="navlink">Contact</a>
+    </nav>
+    <a class="btn pill" href="#/contact" data-route="/contact" data-magnet>
+      <span class="dot-live"></span>Hire me
+    </a>
+    <button class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <div id="mobile-nav" class="mobile-nav" aria-hidden="true">
+    <a href="#/"        data-route="/">Home</a>
+    <a href="#/work"    data-route="/work">Work</a>
+    <a href="#/journal" data-route="/journal">Journal</a>
+    <a href="#/contact" data-route="/contact">Contact</a>
+  </div>
+
+  <main id="main">
+
+    <!-- ====== HOME ====== -->
+    <section class="page" data-page="/" id="page-home">
+      <section class="hero">
+        <div class="hero-bg" aria-hidden="true">
+          <div class="orb orb-a"></div>
+          <div class="orb orb-b"></div>
+          <div class="grid-bg"></div>
+        </div>
+        <div class="hero-inner">
+          <p class="hero-meta">
+            <span class="dot"></span>
+            Open to work — part-time, full-time, internships. Summer 2026 onward.
+          </p>
+          <h1 class="display" aria-label="I build fast, honest software.">
+            <span class="line"><span data-split>I build</span></span>
+            <span class="line"><span data-split>fast,</span></span>
+            <span class="line"><span data-split><em>honest</em></span></span>
+            <span class="line"><span data-split>software.</span></span>
+          </h1>
+          <p class="lede">
+            SE student at AYBU (graduating Jun 2027). I write the tools I wished existed —
+            a dotfile installer, a study-notes vault on Excalidraw, an auto-clicker for the Claude CLI.
+            Mostly TypeScript and Go. Three.js when the page needs depth.
+          </p>
+          <p class="currently">
+            <span class="kbd">now</span>
+            Sharpening full-stack skills the hard way — no AI handholding — to land real full-time work.
+          </p>
+          <div class="hero-cta">
+            <a href="#/work" data-route="/work" class="btn primary" data-magnet>
+              <span>Selected work</span>
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="#/contact" data-route="/contact" class="btn ghost">
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M3 7l9 6 9-6M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Contact me</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-scroll" aria-hidden="true">
+          <span>SCROLL</span>
+          <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 5v14m-6-6 6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </section>
+
+      <!-- Stack marquee strip -->
+      <section class="stack-marquee" aria-label="Tech stack">
+        <div class="stack-track" id="stack-track"></div>
+      </section>
+
+      <section class="section about-section">
+        <span class="kicker">02 — About</span>
+        <h2 class="h2 about-h">
+          Student by day, builder by night.
+          <em>I obsess over the small details</em> —
+          easing curves, milliseconds, the wording in an error message.
+        </h2>
+        <div class="about-grid">
+          <div class="about-card">
+            <span class="card-idx">/ 01</span>
+            <h3>Now</h3>
+            <p>Studying software engineering at AYBU. Writing TypeScript and shipping side projects to learn faster than coursework allows.</p>
+          </div>
+          <div class="about-card">
+            <span class="card-idx">/ 02</span>
+            <h3>Focus</h3>
+            <p>Real-time graphics, developer tooling, design-engineering. Calm UI, honest performance, code I can read in six months.</p>
+          </div>
+          <div class="about-card">
+            <span class="card-idx">/ 03</span>
+            <h3>Looking for</h3>
+            <p>Summer 2026 internships. Frontend, full-stack, or graphics. Remote or Ankara/İstanbul.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-band">
+        <h2>Got an idea? <em>Let's build it.</em></h2>
+        <a class="btn primary lg" href="#/contact" data-route="/contact" data-magnet>Start a conversation →</a>
+      </section>
+    </section>
+
+    <!-- ====== WORK ====== -->
+    <section class="page" data-page="/work" id="page-work">
+      <header class="page-head">
+        <span class="kicker">02 — Selected work</span>
+        <h1 class="h1">Things I&rsquo;ve <em>shipped.</em></h1>
+        <p class="page-lede">Live from GitHub. Hover any card to see stats. Click to view source; if a live demo exists you'll see a "Visit" badge.</p>
+      </header>
+
+      <div class="work-filters" role="tablist" aria-label="Filter by language">
+        <button class="chip active" data-filter="all" role="tab" aria-selected="true">All</button>
+      </div>
+
+      <div class="work-layout">
+        <div id="grid" class="grid" aria-busy="true">
+          <div class="card sk"></div><div class="card sk"></div>
+          <div class="card sk"></div><div class="card sk"></div>
+        </div>
+
+        <aside class="work-aside" aria-label="Project preview">
+          <div class="preview" id="preview" data-empty="true">
+            <div class="preview-banner">
+              <div class="preview-avatar"><img id="preview-avatar" alt="" loading="lazy"/></div>
+            </div>
+            <div class="preview-body" data-lenis-prevent>
+              <div class="preview-head">
+                <div>
+                  <h4 id="preview-title">Hover a project</h4>
+                  <span class="preview-owner" id="preview-owner">— preview shows here —</span>
+                </div>
+                <span id="preview-lang" class="preview-lang"></span>
+              </div>
+              <p class="preview-desc" id="preview-desc">Move your cursor over any card on the left. README, stats, and links appear here.</p>
+              <div class="preview-readme" id="preview-readme"></div>
+              <div class="preview-topics" id="preview-topics"></div>
+              <div class="preview-stats">
+                <span><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M8 .25 9.952 5.275l5.388.5L11.244 9.42l1.234 5.33L8 11.917l-4.478 2.833 1.234-5.33L.66 5.775l5.388-.5z"/></svg> <span id="preview-stars">0</span></span>
+                <span><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M5 3.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0zm0 2.122a2.25 2.25 0 1 0-1.5 0v5.256a2.251 2.251 0 1 0 1.5 0V7.5h3.55a2.5 2.5 0 0 1 2.5 2.5v.628a2.251 2.251 0 1 0 1.5 0V10a4 4 0 0 0-4-4H5V5.372zM5 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0zm6.75.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5z"/></svg> <span id="preview-forks">0</span></span>
+                <span><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Z"/></svg> <span id="preview-issues">0</span></span>
+              </div>
+              <div class="preview-meta">
+                <span id="preview-license"></span>
+                <span id="preview-branch"></span>
+                <span id="preview-updated"></span>
+              </div>
+              <div class="preview-actions">
+                <a class="action" id="preview-source" href="#" target="_blank" rel="noopener">Source ↗</a>
+                <a class="action live" id="preview-visit" href="#" target="_blank" rel="noopener" hidden>Visit live ↗</a>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <p class="work-foot muted">
+        More on <a class="ulink" href="https://github.com/Mohamedattiadev" target="_blank" rel="noopener">github.com/Mohamedattiadev ↗</a>
+      </p>
+    </section>
+
+    <!-- ====== JOURNAL ====== -->
+    <section class="page" data-page="/journal" id="page-journal">
+      <header class="page-head">
+        <span class="kicker">03 — Journal</span>
+        <h1 class="h1">Notes &amp; build <em>logs.</em></h1>
+        <p class="page-lede">Drafts saved in your browser. Click <strong>New post</strong> to add one. Pick a template, write markdown, add images.</p>
+      </header>
+
+      <div class="journal-toolbar">
+        <button class="btn primary sm owner-only" id="post-new">
+          <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          New post
+        </button>
+        <span class="muted j-info owner-only">Stored locally · <a href="#" id="post-export" class="ulink">Export</a> · <a href="#" id="post-import" class="ulink">Import</a> · <button class="linkish" id="admin-out">Sign out</button></span>
+        <span class="muted j-info" id="visitor-note">Read-only · <button class="linkish" id="admin-in">Admin sign in</button></span>
+        <input type="file" id="post-import-file" accept="application/json" hidden>
+      </div>
+
+      <div class="journal-layout">
+        <aside id="journal-list" class="journal-list" aria-label="Posts" data-lenis-prevent></aside>
+        <article id="journal-view" class="journal-view"><p class="muted">Select a post →</p></article>
+      </div>
+    </section>
+
+    <!-- ====== CONTACT ====== -->
+    <section class="page" data-page="/contact" id="page-contact">
+      <header class="page-head">
+        <span class="kicker">04 — Contact</span>
+        <h1 class="contact-h">Let&rsquo;s <em>talk.</em></h1>
+        <p class="page-lede">
+          I read every message. Fastest reply over email — usually within a day.
+        </p>
+      </header>
+
+      <div class="contact-hero">
+        <img class="ch-avatar" src="https://github.com/Mohamedattiadev.png?size=160" alt="Mohamed Attia" width="72" height="72" loading="lazy"/>
+        <div class="ch-text">
+          <div class="ch-name">
+            <strong>Mohamed Attia</strong>
+            <span class="ch-status"><span class="dot-live"></span>Open to work · Summer 2026</span>
+          </div>
+          <p class="ch-meta">
+            Ankara · UTC+3 · English / Türkçe / العربية ·
+            replies on email within 24h, Mon–Fri.
+          </p>
+        </div>
+      </div>
+
+      <dl class="contact-list">
+        <div class="row">
+          <dt>Email</dt>
+          <dd><a href="mailto:mohattiads@gmail.com">mohattiads@gmail.com</a></dd>
+        </div>
+        <div class="row">
+          <dt>CV</dt>
+          <dd><button type="button" id="cv-open" class="linkish">Preview PDF →</button> <span class="muted">98 KB · updated Jun 2026</span></dd>
+        </div>
+        <div class="row">
+          <dt>GitHub</dt>
+          <dd><a href="https://github.com/Mohamedattiadev" target="_blank" rel="noopener">github.com/Mohamedattiadev ↗</a></dd>
+        </div>
+        <div class="row">
+          <dt>LinkedIn</dt>
+          <dd><a href="https://www.linkedin.com/in/mohamed-attia" target="_blank" rel="noopener">linkedin.com/in/mohamed-attia ↗</a></dd>
+        </div>
+        <div class="row">
+          <dt>X / Twitter</dt>
+          <dd><a href="https://x.com/mohamedattiadev" target="_blank" rel="noopener">@mohamedattiadev ↗</a></dd>
+        </div>
+      </dl>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <span>© <span id="year"></span> Mohamed Attia</span>
+  </footer>
+
+  <!-- Post editor modal -->
+  <div class="modal" id="post-modal" aria-hidden="true" role="dialog" aria-labelledby="post-modal-title">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel">
+      <header class="modal-head">
+        <h3 id="post-modal-title">New post</h3>
+        <button class="icon-btn" data-close aria-label="Close">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <div class="modal-body">
+        <div class="field-row">
+          <label class="field flex-2">
+            <span>Title</span>
+            <input type="text" id="post-title" placeholder="A great headline…" />
+          </label>
+          <label class="field">
+            <span>Date</span>
+            <input type="date" id="post-date" />
+          </label>
+          <label class="field">
+            <span>Template</span>
+            <select id="post-template">
+              <option value="">— Use template —</option>
+              <option value="blank">Blank</option>
+              <option value="project">Project writeup</option>
+              <option value="tutorial">Tutorial / how-to</option>
+              <option value="note">Quick note</option>
+              <option value="til">TIL (Today I Learned)</option>
+              <option value="changelog">Changelog (vX.Y.Z)</option>
+              <option value="weekly">Weekly recap</option>
+              <option value="bughunt">Bug hunt</option>
+              <option value="review">Review (book / tool)</option>
+              <option value="postmortem">Postmortem</option>
+            </select>
+          </label>
+        </div>
+        <div class="editor-toolbar">
+          <button class="tb" data-md="bold" title="Bold"><b>B</b></button>
+          <button class="tb" data-md="italic" title="Italic"><i>I</i></button>
+          <button class="tb" data-md="h2" title="Heading">H</button>
+          <button class="tb" data-md="link" title="Link">⛓</button>
+          <button class="tb" data-md="code" title="Code">{ }</button>
+          <button class="tb" data-md="quote" title="Quote">❝</button>
+          <span class="tb-sep"></span>
+          <button class="tb" id="md-image-url" title="Insert image URL">🖼 URL</button>
+          <button class="tb" id="md-image-file" title="Upload image">⤴ Upload</button>
+          <input type="file" id="md-image-input" accept="image/*" hidden>
+        </div>
+        <div class="editor-split">
+          <label class="field">
+            <span>Body (Markdown)</span>
+            <textarea id="post-body" rows="16" placeholder="# Heading&#10;&#10;Write in markdown…"></textarea>
+          </label>
+          <div class="field">
+            <span>Preview</span>
+            <div id="post-preview" class="post-preview"></div>
+          </div>
+        </div>
+      </div>
+      <footer class="modal-foot">
+        <button class="btn ghost sm" data-close>Cancel</button>
+        <button class="btn danger sm" id="post-delete" hidden>Delete</button>
+        <button class="btn primary sm" id="post-save">Save post</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- In-app dialog (alert/confirm/prompt replacement) -->
+  <div class="dialog" id="dialog" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+    <div class="dialog-backdrop" data-dclose></div>
+    <div class="dialog-panel">
+      <h4 id="dialog-title">Confirm</h4>
+      <p id="dialog-message"></p>
+      <div id="dialog-fields" class="dialog-fields"></div>
+      <div class="dialog-foot">
+        <button id="dialog-cancel" class="btn ghost sm">Cancel</button>
+        <button id="dialog-ok" class="btn primary sm">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Iframe preview modal (CV, live demos) -->
+  <div class="modal" id="iframe-modal" aria-hidden="true" role="dialog" aria-labelledby="iframe-title">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel iframe-panel">
+      <header class="modal-head">
+        <h3 id="iframe-title">Preview</h3>
+        <div class="modal-head-actions">
+          <a id="iframe-open" class="btn ghost sm" href="#" target="_blank" rel="noopener">Open in tab ↗</a>
+          <a id="iframe-download" class="btn primary sm" href="#" download hidden>Download</a>
+          <button class="icon-btn" data-close aria-label="Close">
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </header>
+      <div class="iframe-host">
+        <iframe id="iframe-frame" title="Preview" src="about:blank" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        <div class="iframe-fallback" id="iframe-fallback" hidden>
+          <p>Preview blocked by the site. <a id="iframe-fallback-open" class="ulink" href="#" target="_blank" rel="noopener">Open it in a new tab →</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./assets/js/main.js"></script>
+</body>
+</html>

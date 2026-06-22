@@ -1,0 +1,5 @@
+{
+  "_comment": "Tracks which queue files have been published. Maintained by scripts/publish-post.mjs.",
+  "weeks": {},
+  "slugs": []
+}
