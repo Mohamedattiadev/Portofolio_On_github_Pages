@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": "auto_side-project-readme_2026-06-22",
+    "title": "How I structure a side-project README",
+    "date": "2026-06-22",
+    "body": "# How I structure a side-project README\n\nA good README is a sales page for your project. Make it skimmable. People decide in 15 seconds.\n\nMy template, in order:\n\n1. **One sentence**, top of the file. What the project is, in plain English.\n2. **A picture or GIF.** If the project has a UI, show it. People believe pictures.\n3. **Three bullet points.** The things it does, the things it does *not* do.\n4. **Install + run.** Two or three commands max. Copy-paste ready.\n5. **One example.** Real input, real output.\n6. **A link to \"why\".** A blog post or short doc explaining the motivation. Optional but powerful.\n\nI never write a long \"Features\" list. I never explain my life story. I never use words like *robust* or *enterprise-grade*.\n\nA good README respects the reader's time. People who can read it in 30 seconds become users. People who cannot, leave. That is the whole game.\n\nIf you have one hour for your project this week, spend it on the README.",
+    "source": "auto"
+  }
+]
