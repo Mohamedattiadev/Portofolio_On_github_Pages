@@ -7,6 +7,8 @@ gsap.registerPlugin(ScrollTrigger);
 const GH_USER = "Mohamedattiadev";
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const isTouch = matchMedia("(hover:none),(pointer:coarse)").matches;
+import { slugify, readingTime, escapeHtml, escapeAttr, byDateDesc, routeFromPath } from "./utils.js";
+
 const $  = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 $("#year").textContent = new Date().getFullYear();
@@ -250,10 +252,7 @@ bindMagnetic();
 })();
 
 /* ===== Hash router ===== */
-function currentRoute() {
-  const p = location.pathname || "/";
-  return p === "" ? "/" : p;
-}
+function currentRoute() { return routeFromPath(location.pathname); }
 function goRoute(route, replace = false) {
   const url = route + location.search + location.hash;
   if (replace) history.replaceState(null, "", url);
@@ -781,7 +780,6 @@ function loadPosts() {
   return [...user, ...extra].sort(byDateDesc);
 }
 function savePosts(arr) { localStorage.setItem(LS_KEY, JSON.stringify(arr)); }
-function byDateDesc(a, b) { return (b.date || "").localeCompare(a.date || ""); }
 
 let activePostId = null;
 async function initJournal() {
@@ -961,15 +959,6 @@ function hidePostRail() {
   if (!rail) return;
   if (railObserver) { railObserver.disconnect(); railObserver = null; }
   rail.hidden = true; rail.innerHTML = "";
-}
-
-function slugify(s) {
-  return String(s).toLowerCase().trim()
-    .replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-").slice(0, 80);
-}
-function readingTime(text) {
-  const words = String(text || "").trim().split(/\s+/).filter(Boolean).length;
-  return Math.max(1, Math.round(words / 220));
 }
 
 async function openPost(id) {
@@ -1236,10 +1225,6 @@ function splitChars(el) {
   });
   el.appendChild(frag);
 }
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-}
-function escapeAttr(s) { return escapeHtml(s); }
 
 /* ===== Boot ===== */
 renderRoute();

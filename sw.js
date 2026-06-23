@@ -2,7 +2,7 @@
 // Strategy: precache app shell, stale-while-revalidate for data/CDN,
 // cache-first for images and library bundles, offline fallback.
 
-const VERSION = "v4";
+const VERSION = "v5";
 const SHELL = `shell-${VERSION}`;
 const DATA = `data-${VERSION}`;
 const IMG = `img-${VERSION}`;
@@ -17,6 +17,7 @@ const SHELL_URLS = [
   "/manifest.webmanifest",
   "/assets/css/base.css",
   "/assets/js/main.js",
+  "/assets/js/utils.js",
   "/assets/vendor/gsap.js",
   "/assets/vendor/scrolltrigger.js",
   "/assets/vendor/lenis.js",

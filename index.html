@@ -22,9 +22,29 @@
   <link rel="preconnect" href="https://api.github.com" crossorigin>
   <link rel="preconnect" href="https://cdn.simpleicons.org">
   <link rel="preconnect" href="https://opengraph.githubassets.com">
-  <link rel="preload" as="style" href="./assets/css/base.css" />
-  <link rel="stylesheet" href="./assets/css/base.css" />
+  <style>
+    /* Critical CSS — paints the shell before base.css arrives */
+    :root{--bg:#0a0710;--bg-2:#0d0a1a;--fg:#ececf2;--muted:#7c7990;--accent:#a78bfa;--accent-2:#7c3aed;--line:rgba(255,255,255,.08);--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;--radius-sm:8px}
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    html{background:var(--bg);color-scheme:dark}
+    body{font-family:var(--mono);color:var(--fg);background:var(--bg);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit;cursor:pointer;background:none;border:0;color:inherit;padding:0}
+    .skip{position:absolute;left:-9999px}
+    .loader{position:fixed;inset:0 0 auto 0;height:2px;z-index:90;pointer-events:none}
+    .loader .bar{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+    .topbar{position:fixed;top:0;left:0;right:0;z-index:30;display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:1rem;padding:.85rem 1.5rem;background:rgba(10,7,16,.75);backdrop-filter:blur(14px);border-bottom:1px solid transparent}
+    .brand{display:inline-flex;align-items:center;font-size:.86rem;font-weight:600;padding:.4rem .6rem;border-radius:var(--radius-sm)}
+    .navlinks{display:flex;justify-content:center;gap:.1rem;font-size:.78rem}
+    .page{display:none}
+    .page.active{display:block}
+    .post-rail[hidden],.rail-tip[hidden],.to-top[hidden]{display:none!important}
+  </style>
+  <link rel="preload" as="style" href="./assets/css/base.css" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="./assets/css/base.css" /></noscript>
   <link rel="modulepreload" href="./assets/js/main.js" />
+  <link rel="modulepreload" href="./assets/js/utils.js" />
   <link rel="modulepreload" href="/assets/vendor/gsap.js" />
   <link rel="modulepreload" href="/assets/vendor/scrolltrigger.js" />
   <link rel="modulepreload" href="/assets/vendor/lenis.js" />
