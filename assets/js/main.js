@@ -351,19 +351,19 @@ function initHome() {
 
   gsap.from("#page-home .stack-marquee", {
     scrollTrigger: { trigger: "#page-home .stack-marquee", start: "top 90%" },
-    autoAlpha: 0, y: 20, duration: 0.7, ease: "expo.out",
+    y: 20, duration: 0.7, ease: "expo.out",
   });
   gsap.from("#page-home .about-card", {
     scrollTrigger: { trigger: "#page-home .about-grid", start: "top 80%" },
-    y: 30, autoAlpha: 0, duration: 0.7, stagger: 0.1, ease: "expo.out",
+    y: 30, duration: 0.7, stagger: 0.1, ease: "expo.out",
   });
   gsap.from("#page-home .about-h", {
     scrollTrigger: { trigger: "#page-home .about-h", start: "top 85%" },
-    y: 24, autoAlpha: 0, duration: 0.7, ease: "expo.out",
+    y: 24, duration: 0.7, ease: "expo.out",
   });
   gsap.from("#page-home .cta-band", {
     scrollTrigger: { trigger: "#page-home .cta-band", start: "top 85%" },
-    y: 20, autoAlpha: 0, duration: 0.45, ease: "power2.out",
+    y: 20, duration: 0.45, ease: "power2.out",
   });
 }
 
