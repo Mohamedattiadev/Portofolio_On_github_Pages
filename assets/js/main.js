@@ -990,10 +990,17 @@ function buildPostRail(view, headings) {
       b.classList.toggle("active", on);
       if (on) activeBtn = b;
     });
-    if (activeBtn && rail.scrollHeight > rail.clientHeight + 1) {
-      const center = activeBtn.offsetTop + activeBtn.offsetHeight / 2 - rail.clientHeight / 2;
-      const max = rail.scrollHeight - rail.clientHeight;
-      rail.scrollTo({ top: Math.max(0, Math.min(max, center)), behavior: "smooth" });
+    if (activeBtn) {
+      requestAnimationFrame(() => {
+        const max = rail.scrollHeight - rail.clientHeight;
+        if (max <= 1) return;
+        const idx = items.indexOf(activeBtn);
+        const ratio = items.length > 1 ? idx / (items.length - 1) : 0;
+        const target = Math.round(ratio * max);
+        if (Math.abs(rail.scrollTop - target) > 1) {
+          rail.scrollTo({ top: target, behavior: "smooth" });
+        }
+      });
     }
   };
 
