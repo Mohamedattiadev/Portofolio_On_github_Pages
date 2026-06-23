@@ -382,6 +382,7 @@ const HIDE_REPOS = new Set([
   "DataMining_Project",
   "Mohamedattiadev",
   "HM-1-2-",
+  "excalidraw-vault",
 ]);
 
 /* Manual extras to PREPEND to the Work grid. Use for repos not on GitHub
@@ -1245,3 +1246,19 @@ renderRoute();
 // re-bind magnetic on DOM additions (only matches .btn.pill / .btn.primary w/ data-magnet)
 const mo = new MutationObserver(() => bindMagnetic());
 mo.observe(document.body, { childList: true, subtree: true });
+
+/* ===== Offline prefetch — warm SW cache for every section ===== */
+async function prefetchForOffline() {
+  const quiet = (url, opts) => fetch(url, opts).catch(() => {});
+  try {
+    const r = await fetch("/assets/data/journal.json");
+    if (r.ok) {
+      const idx = await r.json();
+      idx.forEach((p) => p.bodyUrl && quiet(p.bodyUrl));
+    }
+  } catch {}
+  quiet(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=updated`);
+  quiet("https://github.com/Mohamedattiadev.png?size=160");
+}
+const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1500));
+idle(() => prefetchForOffline(), { timeout: 4000 });
