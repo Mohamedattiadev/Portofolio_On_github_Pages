@@ -60,13 +60,8 @@
     .page.active{display:block}
     .post-rail[hidden],.rail-tip[hidden],.to-top[hidden]{display:none!important}
   </style>
-  <link rel="preload" as="style" href="./assets/css/base.css" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="./assets/css/base.css" /></noscript>
-  <link rel="modulepreload" href="./assets/js/main.js" />
-  <link rel="modulepreload" href="./assets/js/utils.js" />
-  <link rel="modulepreload" href="/assets/vendor/gsap.js" />
-  <link rel="modulepreload" href="/assets/vendor/scrolltrigger.js" />
-  <link rel="modulepreload" href="/assets/vendor/lenis.js" />
+  <!-- Importmap MUST appear before any module preload so the parser
+       has bare specifier mappings ready before any module starts. -->
   <script type="importmap">
   {
     "imports": {
@@ -77,6 +72,13 @@
     }
   }
   </script>
+  <link rel="preload" as="style" href="./assets/css/base.css" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="./assets/css/base.css" /></noscript>
+  <link rel="modulepreload" href="./assets/js/main.js" />
+  <link rel="modulepreload" href="./assets/js/utils.js" />
+  <link rel="modulepreload" href="/assets/vendor/gsap.js" />
+  <link rel="modulepreload" href="/assets/vendor/scrolltrigger.js" />
+  <link rel="modulepreload" href="/assets/vendor/lenis.js" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
