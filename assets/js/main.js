@@ -633,13 +633,19 @@ async function initWork() {
       $$(".card", grid).forEach((c) => c.classList.toggle("active", c === card));
     };
 
+    let hoverTimer = 0;
     function bindCardHovers() {
       $$(".card", grid).forEach((card) => {
         card.addEventListener("pointerenter", () => {
           if (pinnedCard) return;
-          fillPreview(card._repo);
-          setActive(card);
+          clearTimeout(hoverTimer);
+          hoverTimer = setTimeout(() => {
+            if (pinnedCard) return;
+            fillPreview(card._repo);
+            setActive(card);
+          }, 90);
         });
+        card.addEventListener("pointerleave", () => clearTimeout(hoverTimer));
         card.addEventListener("click", (e) => {
           if (e.target.closest(".action")) return;
           e.preventDefault();
