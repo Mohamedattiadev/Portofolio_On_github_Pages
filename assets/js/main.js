@@ -984,7 +984,19 @@ function buildPostRail(view, headings) {
   const setActive = (id) => {
     if (id === lastId) return;
     lastId = id;
-    items.forEach((b) => b.classList.toggle("active", b.dataset.id === id));
+    let activeBtn = null;
+    items.forEach((b) => {
+      const on = b.dataset.id === id;
+      b.classList.toggle("active", on);
+      if (on) activeBtn = b;
+    });
+    if (activeBtn && rail.scrollHeight > rail.clientHeight) {
+      const rr = rail.getBoundingClientRect();
+      const br = activeBtn.getBoundingClientRect();
+      const pad = 24;
+      if (br.top < rr.top + pad) rail.scrollTop -= (rr.top + pad - br.top);
+      else if (br.bottom > rr.bottom - pad) rail.scrollTop += (br.bottom - rr.bottom + pad);
+    }
   };
 
   const ANCHOR = 140;
