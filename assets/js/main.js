@@ -1370,7 +1370,14 @@ mo.observe(document.body, { childList: true, subtree: true });
 
 /* ===== Offline prefetch — warm SW cache for every section ===== */
 async function prefetchForOffline() {
-  const quiet = (url, opts) => fetch(url, opts).catch(() => {});
+  // same-origin can use default cors mode; cross-origin uses no-cors so SW + browser do not throw on missing CORS headers
+  const quiet = (url) => {
+    try {
+      const u = new URL(url, location.origin);
+      const opts = u.origin === location.origin ? {} : { mode: "no-cors" };
+      return fetch(url, opts).catch(() => {});
+    } catch { return Promise.resolve(); }
+  };
   try {
     const r = await fetch("/assets/data/journal.json");
     if (r.ok) {

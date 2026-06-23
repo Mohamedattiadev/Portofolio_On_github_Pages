@@ -14,6 +14,25 @@
         history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
       }
     }(location));
+    // If a stale shell loads without the importmap, the page never boots.
+    // Self-recover: catch module specifier errors and force-reload once,
+    // unregistering any stale Service Worker first.
+    addEventListener("error", function (e) {
+      var msg = (e && (e.message || (e.error && e.error.message))) || "";
+      if (msg.indexOf("Failed to resolve module specifier") === -1 && msg.indexOf("Failed to fetch dynamically imported module") === -1) return;
+      if (sessionStorage.getItem("__reboot")) return;
+      sessionStorage.setItem("__reboot", "1");
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function (rs) {
+          Promise.all(rs.map(function (r) { return r.unregister(); })).then(function () {
+            (caches && caches.keys ? caches.keys() : Promise.resolve([])).then(function (k) {
+              Promise.all((k || []).map(function (n) { return caches.delete(n); })).then(function () { location.reload(); });
+            });
+          });
+        });
+      } else { location.reload(); }
+    }, true);
+    addEventListener("load", function () { setTimeout(function () { sessionStorage.removeItem("__reboot"); }, 4000); });
   </script>
   <title>Mohamed Attia — Software Engineer</title>
   <meta name="description" content="Mohamed Attia — software engineering student. Projects, experiments, journal." />

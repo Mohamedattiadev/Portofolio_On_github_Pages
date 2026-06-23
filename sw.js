@@ -2,7 +2,7 @@
 // Strategy: precache app shell, stale-while-revalidate for data/CDN,
 // cache-first for images and library bundles, offline fallback.
 
-const VERSION = "v8";
+const VERSION = "v9";
 const SHELL = `shell-${VERSION}`;
 const DATA = `data-${VERSION}`;
 const IMG = `img-${VERSION}`;
@@ -102,13 +102,30 @@ async function networkFirst(req, cacheName) {
   }
 }
 
+// HTML navigation: never serve a stale cached document, only fall back to
+// the precached shell or /offline.html if the network is unreachable. This
+// prevents an old index.html (missing the importmap or pointing at the wrong
+// vendor URLs) from breaking module loading.
+async function navigationOnly(req) {
+  try {
+    const res = await fetch(req, { cache: "no-store" });
+    return res;
+  } catch {
+    const shell = await caches.match("/index.html");
+    if (shell) return shell;
+    const offline = await caches.match("/offline.html");
+    if (offline) return offline;
+    return new Response("offline", { status: 503 });
+  }
+}
+
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
 
   if (req.mode === "navigate") {
-    event.respondWith(networkFirst(req, SHELL));
+    event.respondWith(navigationOnly(req));
     return;
   }
   if (isAPI(url)) { event.respondWith(staleWhileRevalidate(req, DATA)); return; }
