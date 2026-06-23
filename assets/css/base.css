@@ -446,7 +446,7 @@ button{font:inherit;cursor:pointer;background:none;border:0;color:inherit;paddin
   position:fixed;top:50%;right:14px;transform:translateY(-50%);z-index:55;
   display:flex;flex-direction:column;gap:.15rem;
   padding:.45rem .4rem;border-radius:10px;
-  max-height:40vh;overflow-y:auto;line-height:1;
+  max-height:calc(100vh - 160px);overflow-y:auto;line-height:1;scroll-behavior:smooth;
   background:rgba(13,10,26,.55);border:1px solid var(--line);
   backdrop-filter:blur(6px);
   scrollbar-width:none;

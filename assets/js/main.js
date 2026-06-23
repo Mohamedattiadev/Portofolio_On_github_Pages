@@ -991,16 +991,12 @@ function buildPostRail(view, headings) {
       if (on) activeBtn = b;
     });
     if (activeBtn) {
-      requestAnimationFrame(() => {
-        const max = rail.scrollHeight - rail.clientHeight;
-        if (max <= 1) return;
+      const max = rail.scrollHeight - rail.clientHeight;
+      if (max > 1) {
         const idx = items.indexOf(activeBtn);
         const ratio = items.length > 1 ? idx / (items.length - 1) : 0;
-        const target = Math.round(ratio * max);
-        if (Math.abs(rail.scrollTop - target) > 1) {
-          rail.scrollTo({ top: target, behavior: "smooth" });
-        }
-      });
+        rail.scrollTop = Math.round(ratio * max);
+      }
     }
   };
 
