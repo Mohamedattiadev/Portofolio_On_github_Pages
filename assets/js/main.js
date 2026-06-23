@@ -11,6 +11,9 @@ import { slugify, readingTime, escapeHtml, escapeAttr, byDateDesc, routeFromPath
 
 const $  = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+// inert polyfill flag — older Safari (< 15.5) and old Firefox lack support
+if (!("inert" in HTMLElement.prototype)) document.documentElement.classList.add("no-inert");
 $("#year").textContent = new Date().getFullYear();
 
 /* ===== Owner mode (toggle journal edit controls) =====
@@ -159,12 +162,17 @@ function dialog({ type = "confirm", title, message = "", fields = [], okText = "
     `).join("");
     dlgOk.textContent = okText;
     dlgCancel.textContent = cancelText;
+    captureFocus();
     dlg.setAttribute("aria-hidden", "false");
+    _dlgUntrap = trapFocus(dlg);
     setTimeout(() => (dlgFields.querySelector("input") || dlgOk).focus(), 30);
   });
 }
+let _dlgUntrap = null;
 function closeDlg(result) {
   dlg.setAttribute("aria-hidden", "true");
+  if (_dlgUntrap) { _dlgUntrap(); _dlgUntrap = null; }
+  restoreFocus();
   if (dlgResolve) { dlgResolve(result); dlgResolve = null; }
 }
 dlgOk.addEventListener("click", () => {
@@ -195,7 +203,9 @@ const ifFallback = $("#iframe-fallback");
 const ifTitle = $("#iframe-title");
 const ifOpen = $("#iframe-open");
 const ifDl   = $("#iframe-download");
+let _ifUntrap = null;
 function openIframe({ url, title, download = null }) {
+  captureFocus();
   ifTitle.textContent = title || "Preview";
   ifOpen.href = url;
   if (download) { ifDl.href = url; ifDl.setAttribute("download", download); ifDl.hidden = false; }
@@ -204,11 +214,14 @@ function openIframe({ url, title, download = null }) {
   ifFrame.src = url;
   ifModal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
+  _ifUntrap = trapFocus(ifModal);
 }
 function closeIframe() {
   ifModal.setAttribute("aria-hidden", "true");
   ifFrame.src = "about:blank";
   document.body.style.overflow = "";
+  if (_ifUntrap) { _ifUntrap(); _ifUntrap = null; }
+  restoreFocus();
 }
 $$("[data-close]", ifModal).forEach((n) => n.addEventListener("click", closeIframe));
 addEventListener("keydown", (e) => { if (e.key === "Escape" && ifModal.getAttribute("aria-hidden") === "false") closeIframe(); });
@@ -639,7 +652,7 @@ async function initWork() {
         .replace(/\[!\[[^\]]*\]\([^)]*\)\]\([^)]*\)/g, "")
         .trim()
         .slice(0, 1200);
-      readmeEl.innerHTML = marked.parse(trimmed);
+      readmeEl.innerHTML = sanitizeHtml(marked.parse(trimmed));
     };
 
     const setActive = (card) => {
@@ -809,7 +822,14 @@ function loadPosts() {
   const extra = AUTO_POSTS.filter((p) => !ids.has(p.id));
   return [...user, ...extra].sort(byDateDesc);
 }
-function savePosts(arr) { localStorage.setItem(LS_KEY, JSON.stringify(arr)); }
+function savePosts(arr) {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(arr)); checkQuota(); }
+  catch (err) {
+    if (err && /quota/i.test(err.name || err.message || "")) toast("Storage full — export or delete posts");
+    else toast("Save failed");
+    throw err;
+  }
+}
 
 let activePostId = null;
 async function initJournal() {
@@ -1009,7 +1029,7 @@ async function openPost(id) {
     if (activePostId !== id) return;
   }
   const { marked } = await import("marked");
-  const html = marked.parse(post.body || "");
+  const html = sanitizeHtml(marked.parse(post.body || ""));
   const mins = readingTime(post.body);
 
   // build TOC from h2/h3
@@ -1209,7 +1229,7 @@ async function updatePreview() {
   const { marked } = await import("marked");
   const md = $("#post-body").value;
   const title = $("#post-title").value;
-  $("#post-preview").innerHTML = (title ? `<h1>${escapeHtml(title)}</h1>` : "") + marked.parse(md || "");
+  $("#post-preview").innerHTML = (title ? `<h1>${escapeHtml(title)}</h1>` : "") + sanitizeHtml(marked.parse(md || ""));
 }
 
 function savePost() {
@@ -1269,6 +1289,57 @@ function scrambleText(el, { duration = 1, delay = 0 } = {}) {
     else el.textContent = final;
   };
   requestAnimationFrame(tick);
+}
+
+/* ===== Sanitizer for marked HTML ===== */
+const _SAFE_PROTO = /^(https?:|mailto:|tel:|#|\/)/i;
+function sanitizeHtml(html) {
+  const t = document.createElement("template");
+  t.innerHTML = String(html);
+  t.content.querySelectorAll("script, iframe, object, embed, link, meta, style, base, form, input, button, select, textarea").forEach((n) => n.remove());
+  t.content.querySelectorAll("*").forEach((el) => {
+    [...el.attributes].forEach((a) => {
+      const n = a.name.toLowerCase();
+      const v = a.value.trim();
+      if (n.startsWith("on")) el.removeAttribute(a.name);
+      else if ((n === "href" || n === "src" || n === "xlink:href") && v && !_SAFE_PROTO.test(v)) el.removeAttribute(a.name);
+      else if (n === "style") el.removeAttribute(a.name);
+    });
+  });
+  return t.innerHTML;
+}
+
+/* ===== Focus trap + last-focused restore ===== */
+const _focusableSel = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+function trapFocus(container) {
+  const onKey = (e) => {
+    if (e.key !== "Tab") return;
+    const f = [...container.querySelectorAll(_focusableSel)].filter((x) => !x.hasAttribute("disabled") && x.offsetParent !== null);
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  };
+  container.addEventListener("keydown", onKey);
+  return () => container.removeEventListener("keydown", onKey);
+}
+let _lastFocused = null;
+function captureFocus() { _lastFocused = document.activeElement; }
+function restoreFocus() { if (_lastFocused && typeof _lastFocused.focus === "function") { try { _lastFocused.focus(); } catch {} } }
+
+/* ===== localStorage quota tracker ===== */
+const LS_QUOTA = 5 * 1024 * 1024;
+function lsUsedBytes() {
+  let total = 0;
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    total += (k.length + (localStorage.getItem(k) || "").length) * 2;
+  }
+  return total;
+}
+function checkQuota() {
+  const used = lsUsedBytes();
+  if (used / LS_QUOTA > 0.8) toast(`Storage at ${Math.round((used / LS_QUOTA) * 100)}% — clean drafts soon`);
 }
 
 function splitChars(el) {
