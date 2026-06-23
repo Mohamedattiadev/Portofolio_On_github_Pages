@@ -259,14 +259,20 @@ function goRoute(route, replace = false) {
   else history.pushState(null, "", url);
   renderRoute();
 }
+const KNOWN_ROUTES = new Set(["/", "/work", "/journal", "/contact", "/admin"]);
 function renderRoute() {
-  const route = currentRoute();
+  let route = currentRoute();
   // Cleanup transient UI from previous route
   document.body.style.overflow = "";
   $("#mobile-nav")?.setAttribute("inert", "");
   $("#mobile-nav")?.classList.remove("open");
   $(".menu-btn")?.setAttribute("aria-expanded", "false");
   $(".work-aside")?.classList.remove("open");
+  if (!KNOWN_ROUTES.has(route)) {
+    const nfUrl = $("#nf-url");
+    if (nfUrl) nfUrl.textContent = location.pathname + location.search;
+    route = "/404";
+  }
   // /admin → trigger sign-in dialog, fall through to journal page underneath
   if (route === "/admin") {
     if (window.__isOwner) { goRoute("/journal", true); return; }
