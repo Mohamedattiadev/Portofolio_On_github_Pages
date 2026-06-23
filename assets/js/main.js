@@ -563,7 +563,7 @@ async function initWork() {
     workAside?.addEventListener("click", (e) => { if (e.target === workAside) closePreviewSheet(); });
     addEventListener("keydown", (e) => { if (e.key === "Escape" && workAside?.classList.contains("open")) closePreviewSheet(); });
 
-    const fillPreview = async (r) => {
+    const fillPreview = async (r, loadReadme = false) => {
       activeRepo = r;
       preview.dataset.empty = "false";
       $("#preview-title").textContent = r.name;
@@ -592,7 +592,6 @@ async function initWork() {
 
       const readmeEl = $("#preview-readme");
       readmeEl.classList.remove("empty");
-      readmeEl.textContent = "Loading README…";
       const cacheKey = `pf:readme:${r.full_name}`;
       const TTL = 6 * 60 * 60 * 1000; // 6h
       const raw = localStorage.getItem(cacheKey);
@@ -600,12 +599,17 @@ async function initWork() {
       let md;
       if (cached && Date.now() - cached.t < TTL) {
         md = cached.d;
+      } else if (!loadReadme) {
+        readmeEl.classList.add("empty");
+        readmeEl.textContent = "Click the card to load README.";
+        return;
       } else {
+        readmeEl.textContent = "Loading README…";
         try {
           const rr = await fetch(`https://api.github.com/repos/${r.full_name}/readme`, {
             headers: { Accept: "application/vnd.github.raw" },
           });
-          md = rr.ok ? await rr.text() : (cached?.d ?? "");
+          md = rr.ok ? await rr.text() : "";
           localStorage.setItem(cacheKey, JSON.stringify({ t: Date.now(), d: md }));
         } catch { md = cached?.d ?? ""; }
       }
@@ -640,7 +644,7 @@ async function initWork() {
           if (e.target.closest(".action")) return;
           e.preventDefault();
           if (pinnedCard === card) { pinnedCard = null; card.classList.remove("pinned"); closePreviewSheet(); }
-          else { pinnedCard = card; fillPreview(card._repo); setActive(card); openPreviewSheet(); }
+          else { pinnedCard = card; fillPreview(card._repo, true); setActive(card); openPreviewSheet(); }
         });
       });
     }

@@ -360,7 +360,7 @@ button{font:inherit;cursor:pointer;background:none;border:0;color:inherit;paddin
 .journal-toolbar{max-width:1280px;margin:0 auto 2rem;padding:0 1.5rem;display:flex;flex-wrap:wrap;align-items:center;gap:1rem}
 .j-info{font-size:.74rem;letter-spacing:.04em}
 .journal-layout{max-width:1280px;margin:0 auto 6rem;padding:0 1.5rem;display:grid;grid-template-columns:300px 1fr;gap:2.5rem}
-@media (max-width:760px){.journal-layout{grid-template-columns:1fr;gap:1.5rem}}
+@media (max-width:900px){.journal-layout{grid-template-columns:1fr;gap:1.5rem}}
 .journal-aside{
   display:flex;flex-direction:column;gap:.5rem;
   position:sticky;top:88px;align-self:start;
@@ -368,7 +368,7 @@ button{font:inherit;cursor:pointer;background:none;border:0;color:inherit;paddin
   border:1px solid var(--line);border-radius:var(--radius-sm);
   padding:.5rem .4rem;background:rgba(0,0,0,.2);
 }
-@media (max-width:760px){.journal-aside{position:static;max-height:34vh}}
+@media (max-width:900px){.journal-aside{position:static;max-height:34vh}}
 .journal-search{
   display:flex;align-items:center;gap:.4rem;
   padding:.35rem .55rem;border:1px solid var(--line);border-radius:6px;
