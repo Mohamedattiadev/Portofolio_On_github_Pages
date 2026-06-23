@@ -18,25 +18,23 @@
   <title>Mohamed Attia — Software Engineer</title>
   <meta name="description" content="Mohamed Attia — software engineering student. Projects, experiments, journal." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%238b5cf6'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle' fill='%23fff' font-family='monospace' font-weight='700'%3EM%3C/text%3E%3C/svg%3E" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://esm.sh" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jbmono-latin.woff2" crossorigin>
   <link rel="preconnect" href="https://api.github.com" crossorigin>
   <link rel="preconnect" href="https://cdn.simpleicons.org">
   <link rel="preconnect" href="https://opengraph.githubassets.com">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="preload" as="style" href="./assets/css/base.css" />
   <link rel="stylesheet" href="./assets/css/base.css" />
   <link rel="modulepreload" href="./assets/js/main.js" />
-  <link rel="modulepreload" href="https://esm.sh/gsap@3.12.5" />
-  <link rel="modulepreload" href="https://esm.sh/lenis@1.1.13" />
+  <link rel="modulepreload" href="/assets/vendor/gsap.js" />
+  <link rel="modulepreload" href="/assets/vendor/scrolltrigger.js" />
+  <link rel="modulepreload" href="/assets/vendor/lenis.js" />
   <script type="importmap">
   {
     "imports": {
-      "gsap":         "https://esm.sh/gsap@3.12.5",
-      "gsap/ScrollTrigger": "https://esm.sh/gsap@3.12.5/ScrollTrigger",
-      "lenis":        "https://esm.sh/lenis@1.1.13",
-      "marked":       "https://esm.sh/marked@14.1.3"
+      "gsap":               "/assets/vendor/gsap.js",
+      "gsap/ScrollTrigger": "/assets/vendor/scrolltrigger.js",
+      "lenis":              "/assets/vendor/lenis.js",
+      "marked":             "/assets/vendor/marked.js"
     }
   }
   </script>
