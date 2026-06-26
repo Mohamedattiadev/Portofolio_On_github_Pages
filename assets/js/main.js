@@ -500,9 +500,12 @@ function relTime(iso) {
   const units = [["year",31536000],["month",2592000],["week",604800],["day",86400],["hour",3600],["minute",60]];
   for (const [u, s] of units) {
     const v = Math.floor(sec / s);
-    if (v >= 1) return `Updated ${v} ${u}${v>1?"s":""} ago`;
+    if (v >= 1) {
+      const unit = t(`time.${v > 1 ? u + "s" : u}`);
+      return `${t("time.updated")} ${v} ${unit} ${t("time.ago")}`;
+    }
   }
-  return "Updated just now";
+  return `${t("time.updated")} ${t("time.just_now")}`;
 }
 
 async function initWork() {
@@ -534,7 +537,7 @@ async function initWork() {
       .filter((r) => !HIDE_REPOS.has(r.name))
       .sort((a, b) => (b.stargazers_count - a.stargazers_count) || (new Date(b.pushed_at) - new Date(a.pushed_at)));
     repos = [...PINNED_PROJECTS, ...repos];
-    if (!repos.length) { grid.innerHTML = `<p class="muted">No public repos.</p>`; return; }
+    if (!repos.length) { grid.innerHTML = `<p class="muted">${t("work.no_repos")}</p>`; return; }
 
     let activeLang = "all";
     let searchQ = "";
@@ -658,16 +661,17 @@ async function initWork() {
       const langEl = $("#preview-lang");
       if (r.language) { langEl.textContent = r.language; langEl.style.display = ""; }
       else langEl.style.display = "none";
-      $("#preview-desc").textContent = r.description || "No description provided.";
+      $("#preview-desc").textContent = r.description || t("work.preview.no_desc");
       $("#preview-stars").textContent  = r.stargazers_count ?? 0;
       $("#preview-forks").textContent  = r.forks_count ?? 0;
       $("#preview-issues").textContent = r.open_issues_count ?? 0;
-      $("#preview-license").textContent = r.license?.spdx_id ? `License · ${r.license.spdx_id}` : "License · —";
-      $("#preview-branch").textContent  = r.default_branch ? `Branch · ${r.default_branch}` : "";
+      $("#preview-license").textContent = `${t("work.preview.license")} · ${r.license?.spdx_id || t("work.preview.dash")}`;
+      $("#preview-branch").textContent  = r.default_branch ? `${t("work.preview.branch")} · ${r.default_branch}` : "";
       $("#preview-updated").textContent = relTime(r.pushed_at);
       $("#preview-topics").innerHTML = (r.topics || []).slice(0, 6).map((t) => `<span class="topic">#${escapeHtml(t)}</span>`).join("");
       const sourceA = $("#preview-source");
-      if (r.html_url) { sourceA.href = r.html_url; sourceA.hidden = false; sourceA.textContent = "Source ↗"; }
+      if (r.html_url) { sourceA.href = r.html_url; sourceA.hidden = false; sourceA.textContent = t("work.source"); }
+      const visitA = $("#preview-visit"); if (visitA) visitA.textContent = t("work.visit");
       else { sourceA.hidden = true; }
       const visit = $("#preview-visit"); const live = liveURL(r);
       if (live) { visit.href = live; visit.hidden = false; } else visit.hidden = true;
@@ -676,7 +680,7 @@ async function initWork() {
       readmeEl.classList.remove("empty");
       if (r.private) {
         readmeEl.classList.add("empty");
-        readmeEl.textContent = "Private repository — no README available. Use the live demo.";
+        readmeEl.textContent = t("work.preview.private_msg");
         return;
       }
       const cacheKey = `pf:readme:${r.full_name}`;
@@ -690,10 +694,10 @@ async function initWork() {
         md = cached.d;
       } else if (!loadReadme) {
         readmeEl.classList.add("empty");
-        readmeEl.textContent = "Click the card to load README.";
+        readmeEl.textContent = t("work.preview.readme_click");
         return;
       } else {
-        readmeEl.textContent = "Loading README…";
+        readmeEl.textContent = t("work.preview.readme_loading");
         try {
           const rr = await fetch(`https://api.github.com/repos/${r.full_name}/readme`, {
             headers: { Accept: "application/vnd.github.raw" },
@@ -705,7 +709,7 @@ async function initWork() {
       if (activeRepo !== r) return;
       if (!md) {
         readmeEl.classList.add("empty");
-        readmeEl.textContent = "No README found.";
+        readmeEl.textContent = t("work.preview.readme_none");
         return;
       }
       const { marked } = await import("marked");
@@ -785,7 +789,7 @@ async function initWork() {
     });
   } catch (e) {
     console.warn(e);
-    grid.innerHTML = `<p class="muted">Could not load projects. <a class="ulink" href="https://github.com/${GH_USER}" target="_blank" rel="noopener">View on GitHub →</a></p>`;
+    grid.innerHTML = `<p class="muted">${t("work.load_failed")} <a class="ulink" href="https://github.com/${GH_USER}" target="_blank" rel="noopener">${t("work.view_github")}</a></p>`;
   }
 }
 
@@ -947,13 +951,13 @@ function renderJournalList() {
   const allPosts = loadPosts();
   list.innerHTML = "";
   if (!allPosts.length) {
-    $("#journal-view").innerHTML = `<p class="muted">No posts yet.${window.__isOwner ? ` Click <strong>New post</strong> to add one.` : ``}</p>`;
+    $("#journal-view").innerHTML = `<p class="muted">${t("journal.empty")}${window.__isOwner ? t("journal.empty_owner") : ``}</p>`;
     return;
   }
   const q = journalFilter.trim().toLowerCase();
   const posts = q ? allPosts.filter((p) => (p.title || "").toLowerCase().includes(q) || (p.body || "").toLowerCase().includes(q)) : allPosts;
   if (!posts.length) {
-    list.innerHTML = `<div class="empty">No posts match “${escapeHtml(q)}”.</div>`;
+    list.innerHTML = `<div class="empty">${t("journal.no_match")} “${escapeHtml(q)}”.</div>`;
     return;
   }
   const buckets = {};
@@ -1109,9 +1113,9 @@ async function openPost(id) {
   $$("#journal-list .post-item").forEach((x) => x.classList.toggle("active", x.dataset.id === id));
   const post = loadPosts().find((p) => p.id === id);
   const view = $("#journal-view");
-  if (!post) { view.innerHTML = `<p class="muted">Post not found.</p>`; return; }
+  if (!post) { view.innerHTML = `<p class="muted">${t("journal.not_found")}</p>`; return; }
   if (!post.body && post.bodyUrl) {
-    view.innerHTML = `<p class="muted">Loading…</p>`;
+    view.innerHTML = `<p class="muted">${t("journal.loading")}</p>`;
     try {
       const r = await fetch(post.bodyUrl);
       if (r.ok) post.body = await r.text();
@@ -1134,10 +1138,10 @@ async function openPost(id) {
   });
   view.innerHTML = `
     ${window.__isOwner ? `<div class="post-actions">
-      <button class="btn ghost sm" id="post-edit">Edit</button>
-      <button class="btn danger sm" id="post-del">Delete</button>
+      <button class="btn ghost sm" id="post-edit">${t("journal.post.edit")}</button>
+      <button class="btn danger sm" id="post-del">${t("journal.post.delete")}</button>
     </div>` : ``}
-    <p class="post-meta-line"><span>${escapeHtml(post.date || "")}</span><span>·</span><span>${mins} min read</span><span>·</span><span>${headings.length} section${headings.length===1?"":"s"}</span></p>
+    <p class="post-meta-line"><span>${escapeHtml(post.date || "")}</span><span>·</span><span>${mins} ${t("journal.min_read")}</span><span>·</span><span>${headings.length} ${t(headings.length===1?"journal.section":"journal.sections")}</span></p>
     ${tmp.innerHTML}
   `;
   const liveHeadings = [...view.querySelectorAll("h2, h3")];
@@ -1514,6 +1518,14 @@ idle(() => prefetchForOffline(), { timeout: 4000 });
     // Re-render dynamic content with new translations
     const route = currentRoute();
     if (route === "/work") { inited.work = false; renderRoute(); }
+    if (route === "/journal" && typeof activePostId !== "undefined" && activePostId) {
+      try { openPost(activePostId); } catch {}
+    }
+    // Translate static text inside preview action buttons (in case applyI18n already updated, ensure label sync)
+    const ps = document.querySelector("#preview-source");
+    const pv = document.querySelector("#preview-visit");
+    if (ps && !ps.hidden) ps.textContent = t("work.source");
+    if (pv && !pv.hidden) pv.textContent = t("work.visit");
     try { ScrollTrigger.refresh(); } catch {}
   });
   // initial active mark

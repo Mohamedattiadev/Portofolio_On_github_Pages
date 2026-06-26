@@ -420,11 +420,11 @@ html[dir="rtl"] #page-journal > .page-head .page-lede{unicode-bidi:plaintext}
 .preview-stats span{display:inline-flex;align-items:center;gap:.3rem}
 .preview-stats svg{color:var(--accent)}
 .preview-meta{font-size:.66rem;color:var(--muted);letter-spacing:.04em;display:flex;flex-wrap:wrap;gap:.7rem}
-.preview-actions{display:flex;gap:.4rem;margin-top:.2rem}
+.preview-actions{display:flex;gap:.4rem;margin-top:.2rem;flex-wrap:wrap}
 .preview-actions .action{
-  flex:1;justify-content:center;
+  flex:1 1 auto;min-width:0;justify-content:center;text-align:center;white-space:nowrap;
   display:inline-flex;align-items:center;gap:.35rem;font-size:.72rem;letter-spacing:.04em;
-  padding:.6rem .8rem;border:1px solid var(--line-strong);border-radius:8px;color:var(--fg);
+  padding:.6rem .7rem;border:1px solid var(--line-strong);border-radius:8px;color:var(--fg);
   transition:background .2s ease,border-color .2s ease,color .2s ease;
 }
 .preview-actions .action:hover{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
