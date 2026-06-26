@@ -300,6 +300,14 @@ function renderRoute() {
   $$(".page").forEach((p) => p.classList.toggle("active", p.dataset.page === route));
   $$(".navlink, #mobile-nav a").forEach((a) => a.classList.toggle("active", a.dataset.route === route));
   if (route !== "/journal" && typeof hidePostRail === "function") hidePostRail();
+  if (route === "/journal" && typeof activePostId !== "undefined" && activePostId) {
+    // Returning to journal — re-attach rail to the already-rendered post body
+    const v = $("#journal-view");
+    if (v) {
+      const hs = [...v.querySelectorAll("h2, h3")];
+      if (hs.length >= 2) buildPostRail(v, hs);
+    }
+  }
   const active = $(`.page[data-page="${route}"]`) || $(`.page[data-page="/"]`);
   if (active) {
     try { lenis.scrollTo(0, { immediate: true }); } catch {}
@@ -349,23 +357,38 @@ const STACK = [
   ["Docker",     "docker"],
 ];
 
+let stackTween = null;
 function buildStackMarquee() {
   const track = $("#stack-track");
   if (!track) return;
   const itemHTML = STACK.map(([name, slug]) =>
     `<span class="stack-item"><img src="https://cdn.simpleicons.org/${slug}/a78bfa" alt="" width="20" height="20" loading="lazy" decoding="async"/><span>${name}</span></span>`
   ).join("");
-  // duplicate 2x so -50% loop is seamless
-  track.innerHTML = itemHTML + itemHTML;
-  if (reduceMotion) return;
-  // animate after layout settles
-  requestAnimationFrame(() => {
-    gsap.to(track, {
-      xPercent: -50,
-      duration: 30,
+  const render = () => {
+    // Tile enough copies so a single set is wider than viewport, then double for seamless loop
+    track.innerHTML = itemHTML; // one copy to measure
+    const oneW = track.scrollWidth || 1;
+    const vw = window.innerWidth;
+    const copies = Math.max(2, Math.ceil(vw / oneW) + 1);
+    track.innerHTML = itemHTML.repeat(copies);
+    if (stackTween) { stackTween.kill(); stackTween = null; }
+    if (reduceMotion) return;
+    const distancePct = 100 / copies; // shift by exactly one copy
+    const px = (oneW * distancePct) / 100;
+    const seconds = Math.max(20, px / 70); // ~70px/sec
+    stackTween = gsap.to(track, {
+      xPercent: -distancePct,
+      duration: seconds,
       ease: "none",
       repeat: -1,
     });
+  };
+  requestAnimationFrame(render);
+  // Rebuild on resize so the loop stays seamless on any viewport
+  let rt = null;
+  addEventListener("resize", () => {
+    clearTimeout(rt);
+    rt = setTimeout(render, 200);
   });
 }
 

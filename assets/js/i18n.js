@@ -141,9 +141,9 @@ const DICTS = {
     "menu":                 "Menü",
 
     "hero.meta":            "İşe açığım — yarı zamanlı, tam zamanlı, staj. 2026 yazından itibaren.",
-    "hero.h1.l1":           "Yap, kır,",
+    "hero.h1.l1":           "Yap, boz,",
     "hero.h1.l2":           "yayınla, tekrarla.",
-    "hero.h1.aria":         "Yap, kır, yayınla, tekrarla.",
+    "hero.h1.aria":         "Yap, boz, yayınla, tekrarla.",
     "hero.lede":            "AYBU'da yazılım mühendisliği öğrencisi. Kendim kullanacağım şeyleri inşa ediyorum — sonra başkaları da kullanabilsin diye GitHub'da yayınlıyorum. Daha akıllı insanlarla bunu daha çok yapabileceğim gerçek bir iş arıyorum.",
     "hero.now_kbd":         "şimdi",
     "hero.now":             "Tam zamanlı bir iş bulmak için tam yığın becerilerini zor yoldan — yapay zeka desteği olmadan — geliştiriyorum.",
@@ -264,9 +264,9 @@ const DICTS = {
     "menu":                 "القائمة",
 
     "hero.meta":            "متاح للعمل — جزئي، كامل، تدريب. ابتداءً من صيف 2026.",
-    "hero.h1.l1":           "ابنِ، اكسر،",
+    "hero.h1.l1":           "صمم، اهدم،",
     "hero.h1.l2":           "اطلق، كرّر.",
-    "hero.h1.aria":         "ابنِ، اكسر، اطلق، كرّر.",
+    "hero.h1.aria":         "صمم، اهدم، اطلق، كرّر.",
     "hero.lede":            "طالب هندسة برمجيات في جامعة AYBU. أبني أشياء أستخدمها فعلاً — ثم أنشرها على GitHub ليستفيد منها غيري. أبحث عن دور حقيقي أعمل فيه أكثر مع أشخاص أذكى مني.",
     "hero.now_kbd":         "الآن",
     "hero.now":             "أصقل مهارات الـ full-stack بالطريق الصعب — بدون مساعدة الذكاء الاصطناعي — للحصول على عمل بدوام كامل.",
